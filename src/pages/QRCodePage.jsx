@@ -38,10 +38,10 @@ export default function QRCodePage() {
             <span className="qr-referral-label">Referral Code : 000001</span>
           </div>
 
-          <div className="qr-note">
+          {/* <div className="qr-note">
             After scanning, you will be prompted to enter your <strong>Agent Code</strong>.
             The agent code is configured in Svatantr and unique to each agent.
-          </div>
+          </div> */}
 
 
         </div>
