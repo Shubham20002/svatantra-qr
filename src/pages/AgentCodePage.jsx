@@ -2,22 +2,13 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SvatantrLogo from '../components/SvatantrLogo'
 
-// TODO (Future): Replace with real API call
-// GET /get-ref-code?agentCode=<AGENT_CODE>
-// Returns: { refCode: "<hex_string>" }
-// Then use refCode to build the redirect URL below.
-async function fetchRefCode(agentCode) {
-  // Hardcoded until API is wired up
-  void agentCode
-  return '6936f35507478040c60f4ac3'
-}
-
 const REDIRECT_BASE = 'https://app.svatantr.in/#/external/apply'
 
 export default function AgentCodePage() {
   const [agentCode, setAgentCode] = useState('')
   const [touched, setTouched] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingMsg, setLoadingMsg] = useState('')
   const [apiError, setApiError] = useState('')
 
   const isEmpty = agentCode.trim() === ''
@@ -32,10 +23,44 @@ export default function AgentCodePage() {
     setApiError('')
 
     try {
-      const refCode = await fetchRefCode(agentCode.trim())
-      // Construct the redirect URL and navigate the user
-      const redirectUrl = `${REDIRECT_BASE}?ref=${encodeURIComponent(refCode)}`
-      window.location.href = redirectUrl
+      // Step 1: look up credentials stored for this agent code
+      setLoadingMsg('Looking up agent…')
+      const lookupRes = await fetch(
+        `/api/agents/lookup?agentCode=${encodeURIComponent(agentCode.trim())}`
+      )
+      if (lookupRes.status === 404) {
+        setApiError('Agent code not found. Please check and try again.')
+        setLoading(false)
+        return
+      }
+      if (!lookupRes.ok) throw new Error('lookup failed')
+      const { username, password } = await lookupRes.json()
+
+      // Step 2: authenticate with the Svatantr platform
+      setLoadingMsg('Authenticating…')
+      const loginRes = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      if (!loginRes.ok) {
+        setApiError('Agent authentication failed. Please contact support.')
+        setLoading(false)
+        return
+      }
+      const loginData = await loginRes.json()
+
+      // Step 3: extract teleCallerId as the ref ID
+      const teleCallerId = loginData?.user?.teleCallerId
+      if (!teleCallerId) {
+        setApiError('Could not retrieve agent reference ID. Please contact support.')
+        setLoading(false)
+        return
+      }
+
+      // Step 4: redirect
+      setLoadingMsg('Redirecting…')
+      window.location.href = `${REDIRECT_BASE}?ref=${encodeURIComponent(teleCallerId)}`
     } catch {
       setApiError('Something went wrong. Please try again.')
       setLoading(false)
@@ -69,7 +94,7 @@ export default function AgentCodePage() {
                 className={`form-input${showError ? ' error' : ''}`}
                 placeholder="e.g. 000001"
                 value={agentCode}
-                onChange={(e) => {
+                onChange={e => {
                   setAgentCode(e.target.value)
                   setApiError('')
                 }}
@@ -90,13 +115,9 @@ export default function AgentCodePage() {
               Note: This referral code is available on the QR code when you scan it.
             </p>
 
-            <button
-              type="submit"
-              className="btn-primary"
-              disabled={loading}
-            >
+            <button type="submit" className="btn-primary" disabled={loading}>
               {loading && <span className="spinner" />}
-              {loading ? 'Redirecting…' : 'Submit'}
+              {loading ? loadingMsg : 'Submit'}
             </button>
           </form>
         </div>
