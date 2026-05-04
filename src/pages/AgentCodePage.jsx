@@ -49,12 +49,10 @@ export default function AgentCodePage() {
         return
       }
       const loginData = await loginRes.json()
-      console.log('Login response:', JSON.stringify(loginData, null, 2))
-
       // Step 3: extract teleCallerId as the ref ID
-      const teleCallerId = loginData?.user?.teleCallerId
+      const teleCallerId = loginData?.data?.user?.teleCallerId
       if (!teleCallerId) {
-        setApiError(`Could not retrieve agent reference ID. Response: ${JSON.stringify(loginData)}`)
+        setApiError('Could not retrieve agent reference ID. Please contact support.')
         setLoading(false)
         return
       }
