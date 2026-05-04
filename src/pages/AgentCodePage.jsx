@@ -38,7 +38,7 @@ export default function AgentCodePage() {
 
       // Step 2: authenticate with the Svatantr platform
       setLoadingMsg('Authenticating…')
-      const loginRes = await fetch('/api/login', {
+      const loginRes = await fetch('https://app.svatantr.in/api/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -49,11 +49,12 @@ export default function AgentCodePage() {
         return
       }
       const loginData = await loginRes.json()
+      console.log('Login response:', JSON.stringify(loginData, null, 2))
 
       // Step 3: extract teleCallerId as the ref ID
       const teleCallerId = loginData?.user?.teleCallerId
       if (!teleCallerId) {
-        setApiError('Could not retrieve agent reference ID. Please contact support.')
+        setApiError(`Could not retrieve agent reference ID. Response: ${JSON.stringify(loginData)}`)
         setLoading(false)
         return
       }
