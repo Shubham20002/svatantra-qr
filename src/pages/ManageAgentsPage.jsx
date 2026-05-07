@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SvatantrLogo from '../components/SvatantrLogo'
+import { getAuthHeader } from '../components/ProtectedRoute'
 
 export default function ManageAgentsPage() {
+  const navigate = useNavigate()
   const [agents, setAgents] = useState([])
   const [listLoading, setListLoading] = useState(true)
   const [listError, setListError] = useState('')
@@ -21,7 +23,8 @@ export default function ManageAgentsPage() {
     setListLoading(true)
     setListError('')
     try {
-      const res = await fetch('/api/agents')
+      const res = await fetch('/api/agents', { headers: getAuthHeader() })
+      if (res.status === 401) { navigate('/admin/login'); return }
       if (!res.ok) throw new Error()
       setAgents(await res.json())
     } catch {
@@ -43,7 +46,7 @@ export default function ManageAgentsPage() {
     try {
       const res = await fetch('/api/agents', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
         body: JSON.stringify(form),
       })
       const data = await res.json()
@@ -64,7 +67,7 @@ export default function ManageAgentsPage() {
   async function handleDelete(id) {
     setDeletingId(id)
     try {
-      await fetch(`/api/agents/${id}`, { method: 'DELETE' })
+      await fetch(`/api/agents/${id}`, { method: 'DELETE', headers: getAuthHeader() })
       setAgents(prev => prev.filter(a => String(a._id) !== String(id)))
     } catch {
       // silently ignore, list will refresh on next load
@@ -81,11 +84,16 @@ export default function ManageAgentsPage() {
 
   return (
     <div className="page-wrapper">
-      <header className="header">
+      <header className="header" style={{ justifyContent: 'space-between', padding: '14px 24px' }}>
         <Link to="/" className="header-logo">
           <SvatantrLogo size={38} />
-          <span className="header-brand">Svatantr</span>
         </Link>
+        <button
+          className="btn-logout"
+          onClick={() => { localStorage.removeItem('admin_token'); navigate('/admin/login') }}
+        >
+          Logout
+        </button>
       </header>
 
       <main className="manage-main">

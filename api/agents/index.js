@@ -1,6 +1,9 @@
 import { getDb } from '../lib/mongodb.js'
+import { requireAuth } from '../lib/auth.js'
 
 export default async function handler(req, res) {
+  if (!requireAuth(req, res)) return
+
   const db = await getDb()
   const col = db.collection('agents')
 

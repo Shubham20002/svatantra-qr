@@ -71,7 +71,6 @@ export default function AgentCodePage() {
       <header className="header">
         <Link to="/" className="header-logo">
           <SvatantrLogo size={38} />
-          <span className="header-brand">Svatantr</span>
         </Link>
       </header>
 

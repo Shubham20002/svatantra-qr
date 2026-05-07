@@ -1,7 +1,10 @@
 import { ObjectId } from 'mongodb'
 import { getDb } from '../lib/mongodb.js'
+import { requireAuth } from '../lib/auth.js'
 
 export default async function handler(req, res) {
+  if (!requireAuth(req, res)) return
+
   if (req.method !== 'DELETE') {
     res.setHeader('Allow', ['DELETE'])
     return res.status(405).end(`Method ${req.method} Not Allowed`)
