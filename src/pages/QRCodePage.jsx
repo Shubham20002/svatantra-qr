@@ -4,7 +4,7 @@ import SvatantrLogo from '../components/SvatantrLogo'
 
 // The QR code encodes the public URL where agents land to enter their code.
 // Update BASE_URL to your deployed domain before printing/sharing.
-const BASE_URL = 'https://qr.svatantr.in/'
+const BASE_URL = 'https://qr.svatantr.in'
 const QR_TARGET_URL = `${BASE_URL}/enter-agent`
 
 export default function QRCodePage() {
