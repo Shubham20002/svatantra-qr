@@ -3,7 +3,8 @@ import { getDb } from '../lib/mongodb.js'
 import { requireAuth } from '../lib/auth.js'
 
 export default async function handler(req, res) {
-  if (!requireAuth(req, res)) return
+  const admin = requireAuth(req, res)
+  if (!admin) return
 
   if (req.method !== 'DELETE') {
     res.setHeader('Allow', ['DELETE'])
@@ -11,9 +12,13 @@ export default async function handler(req, res) {
   }
 
   const { id } = req.query
+  const adminId = String(admin.id)
   try {
     const db = await getDb()
-    const result = await db.collection('agents').deleteOne({ _id: new ObjectId(id) })
+    const result = await db.collection('agents').deleteOne({
+      _id: new ObjectId(id),
+      adminId,
+    })
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: 'Agent not found' })
     }
