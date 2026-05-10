@@ -18,9 +18,9 @@ export default function App() {
       <Route
         path="/manage-agents"
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <ManageAgentsPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
       />
 
