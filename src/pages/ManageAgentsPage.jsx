@@ -170,7 +170,7 @@ export default function ManageAgentsPage() {
         </div>
 
         {/* ── Agents List ── */}
-        <div className="card manage-card">
+        {/* <div className="card manage-card">
           <h2 className="section-heading">Saved Agents</h2>
 
           {listLoading ? (
@@ -200,7 +200,7 @@ export default function ManageAgentsPage() {
               ))}
             </ul>
           )}
-        </div>
+        </div> */}
       </main>
 
       <footer className="footer">
