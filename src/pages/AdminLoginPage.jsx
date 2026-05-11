@@ -104,10 +104,10 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <p className="auth-switch">
+          {/* <p className="auth-switch">
             Don't have an account?{' '}
             <Link to="/admin/signup" className="auth-link">Sign up</Link>
-          </p>
+          </p> */}
         </div>
       </main>
 

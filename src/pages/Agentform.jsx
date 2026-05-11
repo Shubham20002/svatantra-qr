@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import SvatantrLogo from '../components/SvatantrLogo'
 import { getAuthHeader } from '../components/ProtectedRoute'
 
-export default function ManageAgentsPage() {
+
+export default function Agentform() {
   const navigate = useNavigate()
   const [agents, setAgents] = useState([])
   const [listLoading, setListLoading] = useState(true)
@@ -17,22 +18,22 @@ export default function ManageAgentsPage() {
   const [deletingId, setDeletingId] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
 
-  useEffect(() => { loadAgents() }, [])
+//   useEffect(() => { loadAgents() }, [])
 
-  async function loadAgents() {
-    setListLoading(true)
-    setListError('')
-    try {
-      const res = await fetch('/api/agents', { headers: getAuthHeader() })
-      if (res.status === 401) { navigate('/admin/login'); return }
-      if (!res.ok) throw new Error()
-      setAgents(await res.json())
-    } catch {
-      setListError('Failed to load agents.')
-    } finally {
-      setListLoading(false)
-    }
-  }
+//   async function loadAgents() {
+//     setListLoading(true)
+//     setListError('')
+//     try {
+//       const res = await fetch('/api/agents', { headers: getAuthHeader() })
+//       if (res.status === 401) { navigate('/admin/login'); return }
+//       if (!res.ok) throw new Error()
+//       setAgents(await res.json())
+//     } catch {
+//       setListError('Failed to load agents.')
+//     } finally {
+//       setListLoading(false)
+//     }
+//   }
 
   async function handleAdd(e) {
     e.preventDefault()
@@ -56,7 +57,7 @@ export default function ManageAgentsPage() {
       }
       setForm({ agentId: '', username: '', password: '' })
       setFormSuccess('Agent added successfully.')
-      await loadAgents()
+    //   await loadAgents()
     } catch {
       setFormError('Something went wrong. Please try again.')
     } finally {
@@ -89,11 +90,14 @@ export default function ManageAgentsPage() {
           <SvatantrLogo size={38} />
         </Link>
         <button
-          className="btn-logout"
-          onClick={() => { localStorage.removeItem('admin_token'); navigate('/admin/login') }}
-        >
-          Logout
-        </button>
+      className="btn-logout"
+      onClick={() => {
+        localStorage.removeItem("admin_token");
+        navigate("/admin/login");
+      }}
+    >
+      Login
+    </button>
       </header>
 
       <main className="manage-main">
