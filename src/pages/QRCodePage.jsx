@@ -32,10 +32,10 @@ export default function QRCodePage() {
               includeMargin={false}
             />
           </div>
-
+{/* 
           <div>
             <span className="qr-referral-label">Referral Code : 000001</span>
-          </div>
+          </div> */}
 
           <div className="qr-note">
             After scanning, you will be prompted to enter your <strong>Agent Code</strong>.
