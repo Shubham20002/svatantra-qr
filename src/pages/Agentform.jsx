@@ -126,7 +126,7 @@ export default function Agentform() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="username">Username /Sales Executive Email</label>
+              <label className="form-label" htmlFor="username">Sales Executive / Username </label>
               <input
                 id="username"
                 type="text"
@@ -140,7 +140,7 @@ export default function Agentform() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="password">Sales Executive Password</label>
+              <label className="form-label" htmlFor="password">Sales Executive Password </label>
               <div className="password-wrap">
                 <input
                   id="password"
