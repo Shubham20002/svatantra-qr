@@ -126,7 +126,7 @@ export default function Agentform() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="username">Sales Executive / Username </label>
+              <label className="form-label" htmlFor="username">Sales Executive Username / Email</label>
               <input
                 id="username"
                 type="text"
