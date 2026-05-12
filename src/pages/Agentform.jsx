@@ -111,7 +111,7 @@ export default function Agentform() {
 
           <form onSubmit={handleAdd} noValidate>
             <div className="form-group">
-              <label className="form-label" htmlFor="agentId">Agent ID</label>
+              <label className="form-label" htmlFor="agentId">Agent Code</label>
               <input
                 id="agentId"
                 type="text"
@@ -126,7 +126,7 @@ export default function Agentform() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="username">Username / Email</label>
+              <label className="form-label" htmlFor="username">Username /Sales Executive Email</label>
               <input
                 id="username"
                 type="text"
@@ -140,7 +140,7 @@ export default function Agentform() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="password">Password</label>
+              <label className="form-label" htmlFor="password">Sales Executive Password</label>
               <div className="password-wrap">
                 <input
                   id="password"
@@ -168,7 +168,7 @@ export default function Agentform() {
 
             <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting && <span className="spinner" />}
-              {submitting ? 'Adding…' : 'Add Agent'}
+              {submitting ? 'Adding…' : 'Activate'}
             </button>
           </form>
         </div>
