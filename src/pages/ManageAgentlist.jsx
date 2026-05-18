@@ -15,6 +15,7 @@ export default function ManageAgentlist() {
   const [formSuccess, setFormSuccess] = useState('')
 
   const [deletingId, setDeletingId] = useState(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => { loadAgents() }, [])
@@ -65,12 +66,17 @@ export default function ManageAgentlist() {
   }
 
   async function handleDelete(id) {
+    setConfirmDeleteId(null)
     setDeletingId(id)
     try {
-      await fetch(`/api/agents/${id}`, { method: 'DELETE', headers: getAuthHeader() })
+      const res = await fetch(`/api/agents/${id}`, { method: 'DELETE', headers: getAuthHeader() })
+      if (!res.ok) {
+        setListError('Failed to delete agent. Please try again.')
+        return
+      }
       setAgents(prev => prev.filter(a => String(a._id) !== String(id)))
     } catch {
-      // silently ignore, list will refresh on next load
+      setListError('Failed to delete agent. Please try again.')
     } finally {
       setDeletingId(null)
     }
@@ -189,13 +195,32 @@ export default function ManageAgentlist() {
                     <span className="agent-item-id">{agent.agentId}</span>
                     <span className="agent-item-username">{agent.username}</span>
                   </div>
-                  <button
-                    className="btn-danger"
-                    onClick={() => handleDelete(String(agent._id))}
-                    disabled={deletingId === String(agent._id)}
-                  >
-                    {deletingId === String(agent._id) ? '…' : 'Delete'}
-                  </button>
+                  {confirmDeleteId === String(agent._id) ? (
+                    <div className="confirm-delete">
+                      <span className="confirm-delete-text">Delete?</span>
+                      <button
+                        className="btn-danger btn-sm"
+                        onClick={() => handleDelete(String(agent._id))}
+                        disabled={deletingId === String(agent._id)}
+                      >
+                        {deletingId === String(agent._id) ? '…' : 'Yes'}
+                      </button>
+                      <button
+                        className="btn-secondary btn-sm"
+                        onClick={() => setConfirmDeleteId(null)}
+                      >
+                        No
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn-danger"
+                      onClick={() => setConfirmDeleteId(String(agent._id))}
+                      disabled={deletingId === String(agent._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

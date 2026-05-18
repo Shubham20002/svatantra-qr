@@ -59,7 +59,7 @@ export default function AgentCodePage() {
 
       // Step 4: redirect
       setLoadingMsg('Redirecting…')
-      window.location.href = `${REDIRECT_BASE}?ref=${encodeURIComponent(teleCallerId)}`
+      window.location.href = `${REDIRECT_BASE}?ref=${encodeURIComponent(teleCallerId)}&agentCode=${encodeURIComponent(agentCode.trim())}`
     } catch {
       setApiError('Something went wrong. Please try again.')
       setLoading(false)

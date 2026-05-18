@@ -11,13 +11,11 @@ export default async function handler(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 
-  const { id } = req.query
-  const adminId = String(admin.id)
+  const id = req.query.id ?? req.params?.id
   try {
     const db = await getDb()
     const result = await db.collection('agents').deleteOne({
       _id: new ObjectId(id),
-      adminId,
     })
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: 'Agent not found' })
